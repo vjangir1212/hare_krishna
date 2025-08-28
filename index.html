@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>हरे कृष्ण - संगीत का आनंद लें</title>
+    
+    <!-- Google Fonts for Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome CDN for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmShkL7g/M13i43q6S9D5xR5yB5q9x3E1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Tailwind CSS CDN for easy styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Custom Tailwind configuration for colors and fonts -->
+    <script>
+        const progressBar = document.getElementById("progress-bar");
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary': '#EC4899', /* Accent Pink */
+                        'secondary': '#FCE7F3', /* Light Pink */
+                        'dark-bg': '#1A202C', /* Dark background */
+                        'card-bg': '#2D3748', /* Darker card background */
+                        'light-text': '#E2E8F0', /* Light gray text */
+                        'light-text-secondary': '#A0AEC0', /* Lighter gray text */
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+
+        * {
+  user-select: none;              /* Standard */
+  -webkit-user-select: none;      /* Chrome, Safari */
+  -moz-user-select: none;         /* Firefox */
+  -ms-user-select: none;          /* Old IE/Edge */
+}
+
+        /* Custom scrollbar for aesthetics, adapted for dark theme */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #1A202C;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #d11874;
+            border-radius: 4px;
+        }
+
+        /* Animated glow effect for the playing card */
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 4px #EC4899, 0 0 4px #8B5CF6;
+            }
+            50% {
+                box-shadow: 0 2px 5px #EC4899, 0 2px 8px #8B5CF6;
+            }
+            100% {
+                box-shadow: 0 0 4px #EC4899, 0 0 4px #8B5CF6;
+            }
+        }
+
+        .playing-card {
+        animation: pulse-glow 2s infinite ease-in-out;    
+        border: 1px solid #f65ce9;    
+        border-radius: 12px;
+        transform: scale(1.02);      /* slight zoom effect */
+        transition: all 0.3s ease;
+
+        }
+
+        /* Styles for the full-screen music player */
+        .full-screen-player {
+        
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #2D3748; /* Dark background for the player */
+            color: #E2E8F0;
+            z-index: 100;
+            transform: translateY(0px); /* Start off-screen at the bottom */
+            transition-property: all;
+            transition-duration: 0.15s;
+            padding: 2rem;
+            box-sizing: border-box;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0px -1px 5px rgba(12, 0, 4, 0.34);
+            img{display: none;}
+            #close-player-btn{display: none;}
+            #loop-btn{display: none;}
+            #player-progress-bar-box{position:relative;bottom: 85px;width: 100vw;}
+            #btn_box{position:fixed;top:5px;width: 100%;scale: 0.8;}
+            #player-current-time{display: none;}
+            #player-total-time{display: none;}
+
+            /* Removed `position: relative` from here */
+        }
+
+        .full-screen-player.is-active {
+            img{display:initial ;}
+            #close-player-btn{display: initial;}
+            #loop-btn{display: initial;position: fixed;top: 10px;left: 10px;}
+            height: 100%; /* Slide up to view */
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            img{display: initial;}
+            #close-player-btn{display:initial;}
+            #player-progress-bar-box{position: relative; bottom: 0px; }
+            #btn_box{position:relative;;scale: 1;}
+            #player-current-time{display: initial;}
+            #player-total-time{display: initial;}
+            #free-btn{display: none;}
+            
+        }
+
+        /* Styles for the drag handle */
+        .drag-handle {
+            width: 50px;
+            height: 5px;
+            background-color: #E2E8F0;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+        }
+        
+        /* Custom styling for the neumorphic-like elements */
+        .player-neumorphic-circle {
+            background-color: #2D3748;
+            /* Changed to an outer, raised shadow */
+            box-shadow: 8px 8px 16px #1a202c, -8px -8px 16px #4a5568;
+            border-radius: 50%; /* Ensure the container is circular */
+        }
+
+        .player-neumorphic-button {
+            background-color: #2D3748;
+            border-radius: 50%;
+            box-shadow: 5px 5px 10px #1a202c, -5px -5px 10px #4a5568;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .player-neumorphic-button:active {
+            box-shadow: inset 3px 3px 6px #1a202c, inset -3px -3px 6px #4a5568;
+        }
+
+        #close-player-btn{
+            position: fixed;
+        margin-top: 5px;
+        margin-right: 5px;
+        scale: 0.7;
+        }
+
+        #progress-bar {
+        width: 100vw;
+        height: 6px;
+        border-radius: 5px;
+        background: #ddd;
+        cursor: pointer;
+        }
+
+
+
+    </style>
+</head>
+<body class="bg-dark-bg text-light-text font-sans antialiased pb-24">
+
+    <!-- Header -->
+    <header style="box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);" class="sticky top-0 z-50 bg-gradient-to-r from-purple-800 to-pink-600 p-4 rounded-b-2xl">
+        <nav style="margin-left: 5px; display: flex ; justify-content: space-between;" class="container mx-auto flex items-center ">
+            
+            
+            <a href="index.html"  class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <span class="text-3xl font-bold text-white">हरे कृष्णा !</span>
+                    
+                </div>
+            </a>
+
+            <div style="margin-right: 20px; display: flex;gap: 40px;" >
+                <a href="index.html"><i class="fa-solid fa-music" style="scale: 1.7;color: #f9fd04;"></i></a>
+                <a href="counter.html"><i class="fa-solid fa-stopwatch-20" style="scale: 2;color: white;"></i></a>
+
+            </div>            
+
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Featured Music Section -->
+        <section class="mb-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8 text-center">Featured Music</h2>
+            <div id="music-card-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Music Card 1 -->
+                <div onclick="playSong(0)" data-song-id="0" class="music-card bg-card-bg rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                    <div class="w-20 h-20 rounded-xl bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <img style="border-radius: 10px;" src="images/khatu_shyam.jpg" alt="">
+                    </div>
+                    <div class="flex-1 truncate">
+                        <h3 class="text-xl font-bold truncate">म्हारो सेठ रुखालो, म्हारी गाड़ी को डीलेवर </h3>
+                        <p class="text-light-text-secondary text-base mt-1">खाटू श्याम जी भजन </p>
+                    </div>
+                </div>
+                <!-- Music Card 2 -->
+                <div onclick="playSong(1)" data-song-id="1" class="music-card bg-card-bg rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                    <div class="w-20 h-20 rounded-xl bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-music text-4xl text-light-text-secondary"></i>
+                    </div>
+                    <div class="flex-1 truncate">
+                        <h3 class="text-xl font-bold truncate">नैना जो मिले हैं सरकार से एसे मुस्कुराया स्याम प्यार से </h3>
+                        <p class="text-light-text-secondary text-base mt-1">खाटू स्याम जी भजन </p>
+                    </div>
+                </div>
+                <!-- Music Card 3 -->
+                <div onclick="playSong(2)" data-song-id="2" class="music-card bg-card-bg rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                    <div class="w-20 h-20 rounded-xl bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-music text-4xl text-light-text-secondary"></i>
+                    </div>
+                    <div class="flex-1 truncate">
+                        <h3 class="text-xl font-bold truncate">राधे राधे बरसाने वाली राधे </h3>
+                        <p class="text-light-text-secondary text-base mt-1">कृष्ण भक्ति संगीत  </p>
+                    </div>
+                </div>
+                <!-- Music Card 4 -->
+                <div onclick="playSong(3)" data-song-id="3" class="music-card bg-card-bg rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                    <div class="w-20 h-20 rounded-xl bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-music text-4xl text-light-text-secondary"></i>
+                    </div>
+                    <div class="flex-1 truncate">
+                        <h3 class="text-xl font-bold truncate">स्यामा आन बसो वृन्दावन में </h3>
+                        <p class="text-light-text-secondary text-base mt-1">जया किशोरी  द्वारा</p>
+                    </div>
+                </div>
+                <!-- Music Card 5 -->
+                <div onclick="playSong(4)" data-song-id="4" class="music-card bg-card-bg rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                    <div class="w-20 h-20 rounded-xl bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-music text-4xl text-light-text-secondary"></i>
+                    </div>
+                    <div class="flex-1 truncate">
+                        <h3 class="text-xl font-bold truncate">तीन बाण के धारी एसा बाण चलाओ ना </h3>
+                        <p class="text-light-text-secondary text-base mt-1">खाटू स्याम जी संगीत </p>
+                    </div>
+                </div>
+                <!-- Music Card 6 -->
+                <div onclick="playSong(5)" data-song-id="5" class="music-card bg-card-bg rounded-2xl shadow-lg p-6 flex items-center space-x-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer">
+                    <div class="w-20 h-20 rounded-xl bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-music text-4xl text-light-text-secondary"></i>
+                    </div>
+                    <div class="flex-1 truncate">
+                        <h3 class="text-xl font-bold truncate">मेरी गाड़ी मेरा बंगला सब तेरो ही है सांवरिया</h3>
+                        <p class="text-light-text-secondary text-base mt-1">खाटू स्याम जी संगीत</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Full-screen Music Player -->
+    <div id="full-screen-player" class="full-screen-player">
+        <!-- Drag handle to indicate it's draggable -->
+        <div class="drag-handle"></div>
+
+        <!-- Player controls and info -->
+        <div class="relative flex flex-col items-center justify-center h-full w-full max-w-sm">
+            
+
+            <!-- Reapet button at the top right -->
+            <button id="loop-btn" class="w-12 h-12 player-neumorphic-button flex items-center justify-center">
+            <i class="fa-solid fa-repeat"></i>
+            </button>
+            
+            
+            <!-- Close button at the top right -->
+            <button id="close-player-btn" class="w-16 h-16 player-neumorphic-button flex items-center justify-center text-light-text-secondary absolute top-0 right-0 m-8">
+                <i class="fa-solid fa-xmark text-2xl"></i>
+            </button>
+            <!-- Album Art -->
+            <div class="relative w-64 h-64 md:w-80 md:h-80 rounded-full player-neumorphic-circle flex items-center justify-center mb-8">
+                <img id="player-cover" src="images/krishana album.jpg" alt="Album Cover" class="w-full h-full object-cover rounded-full p-4">
+            </div>
+
+            <!-- Song Info -->
+            <h3 id="player-song-title" class="text-3xl font-bold text-center mt-6 truncate w-full px-4">गोविंदा जय जय</h3>
+            <p id="player-artist" class="text-light-text-secondary text-lg mt-2 mb-8 text-center truncate w-full px-4">इस्कॉन भक्तों द्वारा</p>
+
+            <!-- Progress Bar -->
+           <div style="width: 100vw;" class="flex items-center w-full px-4 mb-8">
+           <span id="player-current-time" class="text-xs text-gray-400">00:00</span>
+    
+            <div id="player-progress-bar-box" class="relative flex-1 bg-gray-600 h-1 rounded-full mx-4">
+                 <div id="player-progress-bar" class="bg-primary h-1 rounded-full w-0 relative" style="transition: width 0.3s linear;">
+                  <!-- circular knob -->
+                  <div style="transition: left 0.3s linear;" id="progress-knob" class="absolute top-1/2 -translate-y-1/2 right-0 w-3 h-3 bg-primary rounded-full shadow-md"></div>
+            </div>
+           </div>
+
+           <span id="player-total-time" class="text-xs text-gray-400">03:09</span>
+            </div>
+            
+            <div style="position: fixed;bottom: 0px;
+            height: 65px;width: 100%;display: flex;justify-content: space-between;">
+                
+                
+                <div class="free-btn" style="flex: 1;"></div>
+                <div style="width: 240px;"></div>
+                <div class="free-btn" style="flex: 1;"></div>
+
+            </div>
+                                       <!-- Playback Controls -->
+            <div  id="btn_box" class="flex items-center justify-around w-full max-w-xs">
+                
+                
+                <button id="prev-btn" class="w-16 h-16 player-neumorphic-button flex items-center justify-center text-light-text-secondary">
+                    <i class="fa-solid fa-backward text-2xl"></i>
+                </button>
+                <button id="play-pause-button" class="w-20 h-20 bg-primary rounded-full shadow-lg flex items-center justify-center text-white transform transition-all duration-300 hover:scale-105">
+                    <i id="play-pause-icon" class="fa-solid fa-play text-3xl"></i>
+                </button>
+                <button id="next-btn" class="w-16 h-16 player-neumorphic-button flex items-center justify-center text-light-text-secondary">
+                    <i class="fa-solid fa-forward text-2xl"></i>
+                </button>
+
+
+            
+                
+
+            </div>
+
+ 
+            
+            
+
+
+        </div>
+    </div>
+
+    <!-- All JavaScript for the page -->
+<script>
+    const songs = [
+        { title: "म्हारो सेठ रुखालो, खाटू श्याम जी", artist: "खाटू श्याम जी भजन", src: "song1.mp3", cover: "images/khatu_shyam.jpg" },
+        { title: "नैना जो मिले हैं सरकार से एसे मुस्कुराया स्याम प्यार से", artist: "खाटू श्याम जी भजन", src: "song2.mp3", cover: "images/khatu_shyam.jpg" },
+        { title: "राधे राधे बरसाने वाली राधे", artist: "विभिन्न कलाकारों द्वारा", src: "song3.mp3", cover: "images/krishana album.jpg" },
+        { title: "स्यामा आन बसो वृन्दावन में", artist: "गौरवानी द्वारा", src: "song4.mp3", cover: "images/krishana album.jpg" },
+        { title: "तीन बाण के धारी एसा बाण चलाओ ना", artist: "खाटू स्याम जी संगीत", src: "song5.mp3", cover: "images/khatu_shyam.jpg" },
+        { title: "मेरी गाड़ी मेरा बंगला सब तेरो सांवरिया सेठ ", artist: "खाटू स्याम जी संगीत ", src: "song6.mp3", cover: "images/khatu_shyam.jpg" },
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const musicCards = document.querySelectorAll('.music-card');
+        const fullScreenPlayer = document.getElementById('full-screen-player');
+        const playerSongTitle = document.getElementById('player-song-title');
+        const playerArtist = document.getElementById('player-artist');
+        const playerCover = document.getElementById('player-cover');
+        const playPauseButton = document.getElementById('play-pause-button');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const playerCurrentTime = document.getElementById('player-current-time');
+        const playerTotalTime = document.getElementById('player-total-time');
+        const closeButton = document.getElementById('close-player-btn');
+        const audioPlayer = document.getElementById('audio-player');
+        const nextButton = document.getElementById('next-btn');   // ⏭ button
+        const prevButton = document.getElementById('prev-btn');   // ⏮ button
+
+        let currentSongIndex = 0;
+
+        // Load a song
+        function loadSong(songIndex) {
+            // Remove glow from all cards, add to current
+            musicCards.forEach(card => card.classList.remove('playing-card'));
+            if (musicCards[songIndex]) {
+                musicCards[songIndex].classList.add('playing-card');
+            }
+
+            const song = songs[songIndex];
+            playerSongTitle.textContent = song.title;
+            playerArtist.textContent = song.artist;
+            playerCover.src = song.cover;
+
+            audioPlayer.src = song.src;
+            audioPlayer.play();
+
+            fullScreenPlayer.classList.add('is-active');
+            playPauseIcon.classList.remove('fa-play');
+            playPauseIcon.classList.add('fa-pause');
+        }
+
+
+        const freeBtns = document.querySelectorAll('.free-btn');
+        freeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+        fullScreenPlayer.classList.add('is-active');
+        });
+        });
+
+        // Play a selected song from card
+        window.playSong = (songIndex) => {
+       const song = songs[songIndex];
+
+    // If this song is already playing, just open the full-screen player
+    if (currentSongIndex === songIndex && !audioPlayer.paused) {
+        fullScreenPlayer.classList.add('is-active');
+        return; // do not reload or reset time
+    }
+
+    // Otherwise, load the new song
+    currentSongIndex = songIndex;
+    loadSong(songIndex);
+     };
+
+
+
+        // Play/Pause toggle
+        playPauseButton.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playPauseIcon.classList.remove('fa-play');
+                playPauseIcon.classList.add('fa-pause');
+            } else {
+                audioPlayer.pause();
+                playPauseIcon.classList.remove('fa-pause');
+                playPauseIcon.classList.add('fa-play');
+            }
+        });
+
+
+        // loop buttun work ::---->
+
+        let loopMode = 0; // 0 = repeat all / no repeat, 1 = repeat one
+
+        const loopBtn = document.getElementById('loop-btn');
+
+        loopBtn.addEventListener('click', () => {
+            // Toggle between 0 and 1
+        loopMode = (loopMode + 1) % 2;
+
+         if(loopMode === 0){
+        loopBtn.style.backgroundColor = ''; // normal
+        audioPlayer.loop = false; // repeat one disabled
+          } else if(loopMode === 1){
+            loopBtn.style.backgroundColor = '#EC4899'; // highlight for repeat one
+        audioPlayer.loop = true; // HTML audio handles repeat one
+            }
+        });
+
+        // Handle end of song
+        audioPlayer.addEventListener('ended', () => {
+         if(loopMode === 1){
+          // Repeat one: HTML audio.loop already handles this
+           return;
+         } else {
+           // Repeat all / no repeat
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        loadSong(currentSongIndex);
+         }
+            });
+
+
+
+        // Next Song
+        nextButton.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+        });
+
+        // Previous Song
+        prevButton.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+            loadSong(currentSongIndex);
+        });
+
+        // Auto play next when song ends
+        audioPlayer.addEventListener('ended', () => {
+            currentSongIndex = (currentSongIndex + 1) % songs.length;
+            loadSong(currentSongIndex);
+        });
+
+        // Close player
+        const closePlayer = () => {
+            fullScreenPlayer.classList.remove('is-active');
+                   };
+        closeButton.addEventListener('click', closePlayer);
+
+
+
+
+        // // Update progress bar
+        audioPlayer.addEventListener('timeupdate', () => {
+            const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            playerCurrentTime.textContent = formatTime(Math.floor(audioPlayer.currentTime));
+            playerTotalTime.textContent = formatTime(Math.floor(audioPlayer.duration));
+        });
+
+
+   
+
+        const progressBarBox = document.getElementById("player-progress-bar-box");
+        const progressBar = document.getElementById("player-progress-bar");
+        const currentTimeEl = document.getElementById("player-current-time");
+        const totalTimeEl = document.getElementById("player-total-time");
+            // Format time helper
+        function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? "0" + secs : secs}`;
+        }
+
+// Update progress bar as song plays
+        audioPlayer.addEventListener("timeupdate", () => {
+        if (!isNaN(audioPlayer.duration)) {
+            const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = progressPercent + "%";
+
+        // Update time labels
+        currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        totalTimeEl.textContent = formatTime(audioPlayer.duration);
+    }
+});
+
+// Seek when user clicks progress bar
+    progressBarBox.addEventListener("click", (e) => {
+    const rect = progressBarBox.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const seekTime = (clickX / width) * audioPlayer.duration;
+    audioPlayer.currentTime = seekTime;
+});
+
+
+
+
+    function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+  });
+
+
+
+
+
+let loopMode = 0; // 0 = repeat all / no repeat, 1 = repeat one
+
+const loopBtn = document.getElementById('loop-btn');
+
+loopBtn.addEventListener('click', () => {
+    // Toggle between 0 and 1
+    loopMode = (loopMode + 1) % 2;
+
+    if(loopMode === 0){
+        loopBtn.style.backgroundColor = ''; // normal
+        audioPlayer.loop = false; // repeat one disabled
+    } else if(loopMode === 1){
+        loopBtn.style.backgroundColor = '#EC4899'; // highlight for repeat one
+        audioPlayer.loop = true; // HTML audio handles repeat one
+    }
+});
+
+// Handle end of song
+audioPlayer.addEventListener('ended', () => {
+    if(loopMode === 1){
+        // Repeat one: HTML audio.loop already handles this
+        return;
+    } else {
+        // Repeat all / no repeat
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        loadSong(currentSongIndex);
+    }
+});
+
+</script>
+
+
+    <audio id="audio-player" controls style="display:none;"></audio>
+</body>
+</html>
