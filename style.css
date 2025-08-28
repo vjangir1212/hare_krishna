@@ -1,0 +1,148 @@
+
+
+        * {
+  user-select: none;              /* Standard */
+  -webkit-user-select: none;      /* Chrome, Safari */
+  -moz-user-select: none;         /* Firefox */
+  -ms-user-select: none;          /* Old IE/Edge */
+}
+
+        /* Custom scrollbar for aesthetics, adapted for dark theme */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #1A202C;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #d11874;
+            border-radius: 4px;
+        }
+
+        /* Animated glow effect for the playing card */
+        @keyframes pulse-glow {
+            0% {
+                box-shadow: 0 0 4px #EC4899, 0 0 4px #8B5CF6;
+            }
+            50% {
+                box-shadow: 0 2px 5px #EC4899, 0 2px 8px #8B5CF6;
+            }
+            100% {
+                box-shadow: 0 0 4px #EC4899, 0 0 4px #8B5CF6;
+            }
+        }
+
+        .playing-card {
+        animation: pulse-glow 2s infinite ease-in-out;    
+        border: 1px solid #f65ce9;    
+        border-radius: 12px;
+        transform: scale(1.02);      /* slight zoom effect */
+        transition: all 0.3s ease;
+
+        }
+
+        /* Styles for the full-screen music player */
+        .full-screen-player {
+        
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #2D3748; /* Dark background for the player */
+            color: #E2E8F0;
+            z-index: 100;
+            transform: translateY(0px); /* Start off-screen at the bottom */
+            transition-property: all;
+            transition-duration: 0.15s;
+            padding: 2rem;
+            box-sizing: border-box;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: 0px -1px 5px rgba(12, 0, 4, 0.34);
+            img{display: none;}
+            #close-player-btn{display: none;}
+            #loop-btn{display: none;}
+            #player-progress-bar-box{position:relative;bottom: 85px;width: 100vw;}
+            #btn_box{position:fixed;top:5px;width: 100%;scale: 0.8;}
+            #player-current-time{display: none;}
+            #player-total-time{display: none;}
+
+            /* Removed `position: relative` from here */
+        }
+
+        .full-screen-player.is-active {
+            img{display:initial ;}
+            #close-player-btn{display: initial;}
+            #loop-btn{display: initial;position: fixed;top: 10px;left: 10px;}
+            height: 100%; /* Slide up to view */
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            img{display: initial;}
+            #close-player-btn{display:initial;}
+            #player-progress-bar-box{position: relative; bottom: 0px; }
+            #btn_box{position:relative;;scale: 1;}
+            #player-current-time{display: initial;}
+            #player-total-time{display: initial;}
+            #free-btn{display: none;}
+            #player-artist{display: none;}
+            #player-song-title{margin-bottom: 20px;padding-top: 10px;}
+            
+        }
+
+        /* Styles for the drag handle */
+        .drag-handle {
+            width: 50px;
+            height: 5px;
+            background-color: #E2E8F0;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+        }
+        
+        /* Custom styling for the neumorphic-like elements */
+        .player-neumorphic-circle {
+            background-color: #2D3748;
+            /* Changed to an outer, raised shadow */
+            box-shadow: 8px 8px 16px #1a202c, -8px -8px 16px #4a5568;
+            border-radius: 50%; /* Ensure the container is circular */
+        }
+
+        .player-neumorphic-button {
+            background-color: #2D3748;
+            border-radius: 50%;
+            box-shadow: 5px 5px 10px #1a202c, -5px -5px 10px #4a5568;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .player-neumorphic-button:active {
+            box-shadow: inset 3px 3px 6px #1a202c, inset -3px -3px 6px #4a5568;
+        }
+
+        #close-player-btn{
+            position: fixed;
+        margin-top: 5px;
+        margin-right: 5px;
+        scale: 0.7;
+        }
+
+        #progress-bar {
+        width: 100vw;
+        height: 6px;
+        border-radius: 5px;
+        background: #ddd;
+        cursor: pointer;
+        }
+
+        .progress-bar-hitbox {
+            background-color: aqua;
+    padding: 5px 0; /* Adds a vertical buffer of 10 pixels above and below the bar */
+    cursor: pointer; /* Indicates to the user that it's clickable */
+}
+
+
