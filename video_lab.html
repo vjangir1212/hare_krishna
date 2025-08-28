@@ -1,93 +1,169 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>श्री कृष्ण वीडियो गैलरी</title>
-  <!-- Tailwind CSS -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>श्री कृष्ण वीडियो लाइब्रेरी</title>
+
+   <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body {
-      background: #1A202C; /* Dark background */
-      color: #E2E8F0;
-      font-family: 'Poppins', sans-serif;
+
+            * {
+  user-select: none;              /* Standard */
+  -webkit-user-select: none;      /* Chrome, Safari */
+  -moz-user-select: none;         /* Firefox */
+  -ms-user-select: none;          /* Old IE/Edge */
+}
+
+        body::-webkit-scrollbar { width: 8px; }
+    body::-webkit-scrollbar-track { background: #1A202C; }
+    body::-webkit-scrollbar-thumb { background-color: #d11874; border-radius: 4px; }
+
+
+    header {
+      position: fixed;
+      top: 0px;
+      width: 100vw;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
     }
 
+
+
+    body { background: #1A202C; color: #E2E8F0; font-family: 'Poppins', sans-serif; }
     .video-card {
-      background: #2D3748;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.6);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: #2D3748; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+      border: 2px solid transparent;
     }
-
     .video-card:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-6px);
       box-shadow: 0 10px 20px rgba(0,0,0,0.7);
-      border: 2px solid #EC4899;
+      border-color: #f9fd04;
     }
-
-    iframe {
+    /* 16:9 Aspect Ratio Fix */
+    .video-wrapper {
+      position: relative;
       width: 100%;
-      height: 220px;
+      padding-top: 56.25%; /* 16:9 ratio */
     }
-
-    .video-title {
-      padding: 12px;
-      font-size: 16px;
-      text-align: center;
-      background: #1A202C;
-      color: #EC4899;
-      font-weight: 600;
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
     }
   </style>
 </head>
-<body>
 
-  <header class="text-center py-6">
-    <h1 class="text-3xl font-bold text-pink-400">🎥 श्री कृष्ण वीडियो गैलरी 🎥</h1>
-    <p class="text-gray-400">भजन, कथा और कीर्तन का आनंद लें</p>
+
+  <!-- Header -->
+  <header class="top-0 z-50 bg-gradient-to-r from-purple-800 to-pink-600 p-4 rounded-b-2xl">
+    <nav style="margin-left: 5px; display: flex; justify-content: space-between;" class="container mx-auto flex items-center ">
+      <a href="index.html" class="flex items-center space-x-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-3xl font-bold text-white">हरे कृष्णा !</span>
+        </div>
+      </a>
+      <div style="margin-right: 28px; display: flex;gap: 40px;">
+        <a href="index.html"><i class="fa-solid fa-music" style="scale: 1.7;color: white;"></i></a>
+        <a href="counter.html"><i class="fa-solid fa-stopwatch-20" style="scale: 2;color: white;"></i></a>
+        <a href="video_lab.html"><i class="fa-solid fa-video" style="scale: 1.7;color: #f9fd04;"></i></a>
+      
+    </div>            
+    </nav>
   </header>
 
-  <main class="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 p-6">
 
-    <!-- Video 1 -->
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/atVof3pjT-I" frameborder="0" allowfullscreen></iframe>
-      <div class="video-title">हरे कृष्ण महा मंत्र</div>
-    </div>
+<body>
 
-    <!-- Video 2 -->
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/pkYBXqJz5t4" frameborder="0" allowfullscreen></iframe>
-      <div class="video-title">श्री कृष्ण भजन</div>
-    </div>
+  <div style="margin-top: 100px;" class="text-center py-6">
+    <h1 style="color: white;margin-bottom: 10px;text-decoration: underline;" class="text-3xl font-bold text-pink-400">भगवद गीता सार</h1>
+    <p class="text-gray-400">आध्यात्मिक भजन, कथा और कीर्तन का संग्रह</p>
+  </div>
 
-    <!-- Video 3 -->
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/0L82l8oO6nQ" frameborder="0" allowfullscreen></iframe>
-      <div class="video-title">भागवत कथा</div>
-    </div>
-
-    <!-- Video 4 -->
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/sUv-QTtL1Dw" frameborder="0" allowfullscreen></iframe>
-      <div class="video-title">कृष्ण लीला</div>
-    </div>
-
-    <!-- Video 5 -->
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/AgZl3i2ybzA" frameborder="0" allowfullscreen></iframe>
-      <div class="video-title">लाइव कीर्तन</div>
-    </div>
-
-    <!-- Video 6 -->
-    <div class="video-card">
-      <iframe src="https://www.youtube.com/embed/_SHTlwy3ZCw" frameborder="0" allowfullscreen></iframe>
-      <div class="video-title">कृष्ण स्तुति</div>
-    </div>
-
+  <main style="margin-bottom: 100px;" class="max-w-7xl mx-auto p-6 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+    <!-- Videos -->
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="_9Gsy6c-UIA"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="mBjAzqoKJoI"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="g4oEUP4Ztas"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="E-TECeu7nDw"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="e9cJwVIpPVc"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="MogyeLoe9gs"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="MJlzBHbxDSk"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="mm7QSrjoM5g"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="eHj0JiiuRaQ"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="a0FGJEZqdHY"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="4bABPNlueAY"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="XqHvlUQ8BG8"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="b5h2STZX7Ro"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="ag54cHCfJGU"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="zsQVLsDvyL0"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="sosTze3oJMw"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="xU9M2F0iVno"></div></div></div>
+    <div class="video-card"><div class="video-wrapper"><div class="yt-video" data-id="1qhbkOfs280"></div></div></div>
   </main>
 
+  <!-- Load YouTube API -->
+  <script>
+    let players = [];
+
+    function onYouTubeIframeAPIReady() {
+      document.querySelectorAll(".yt-video").forEach((el, index) => {
+        let player = new YT.Player(el, {
+          videoId: el.dataset.id,
+          events: {
+            'onStateChange': function(event) {
+              if (event.data == YT.PlayerState.PLAYING) {
+                players.forEach((p, i) => {
+                  if (i !== index) p.pauseVideo();
+                });
+              }
+            }
+          }
+        });
+        players.push(player);
+      });
+    }
+
+    // Load API script
+    let tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    document.body.appendChild(tag);
+  </script>
+
 </body>
+
+
+
+
+  <!-- Footer -->
+  <footer style="margin-top: 100px;" class="bg-[#2D3748] text-[#A0AEC0] py-6 mt-16 rounded-t-2xl shadow-inner">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+      
+      <!-- Left Side -->
+      <p class="text-sm mb-4 md:mb-0">
+        © 2025 हरे कृष्णा | सर्वाधिकार सुरक्षित
+      </p>
+      
+      <!-- Center Links -->
+      <div class="flex space-x-6 mb-4 md:mb-0">
+        <a href="index.html" class="hover:text-[#EC4899] transition-colors">Home</a>
+        <a href="counter.html" class="hover:text-[#EC4899] transition-colors">Counter</a>
+        <a href="video_lab.html" class="hover:text-[#EC4899] transition-colors">Videos</a>
+        <a href="#" class="hover:text-[#EC4899] transition-colors">Contact</a>
+      </div>
+      
+      <!-- Right Side Social Icons -->
+      <div class="flex space-x-5 text-lg">
+        <a href="#" class="hover:text-[#EC4899]"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="hover:text-[#EC4899]"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-[#EC4899]"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="hover:text-[#EC4899]"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </footer>
+
 </html>
