@@ -14,6 +14,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+
+        * {
+  user-select: none;              /* Standard */
+  -webkit-user-select: none;      /* Chrome, Safari */
+  -moz-user-select: none;         /* Firefox */
+  -ms-user-select: none;          /* Old IE/Edge */
+}
+
+
     body::-webkit-scrollbar { width: 8px; }
     body::-webkit-scrollbar-track { background: #1A202C; }
     body::-webkit-scrollbar-thumb { background-color: #d11874; border-radius: 4px; }
@@ -50,7 +59,7 @@
     }
 
     /* === Mantra Card Styling === */
-    .mantra-card h2 { margin: 0; color: #ffffff; font-size: 1.5rem; }
+    .mantra-card h2 { margin: 0; color: #ffffff; font-size: 1.5rem;font-weight: 530; }
     .mantra-card p { margin-top: 8px; color: #A0AEC0; font-size: 1rem; line-height: 1.5; }
   
 
@@ -88,7 +97,9 @@
       <div style="margin-right: 28px; display: flex;gap: 40px;">
         <a href="index.html"><i class="fa-solid fa-music" style="scale: 1.7;color: white;"></i></a>
         <a href="counter.html"><i class="fa-solid fa-stopwatch-20" style="scale: 2;color: #f9fd04;"></i></a>
-      </div>            
+        <a href="video_lab.html"><i class="fa-solid fa-video" style="scale: 1.7;color: white;"></i></a>
+      
+    </div>            
     </nav>
   </header>
 
@@ -217,4 +228,34 @@
     setInterval(createParticle, 500);
   </script>
 </body>
+  <!-- Footer -->
+  <footer style="margin-top: 100px;" class="bg-[#2D3748] text-[#A0AEC0] py-6 mt-16 rounded-t-2xl shadow-inner">
+    <div class="max-w-5xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+      
+      <!-- Left Side -->
+      <p class="text-sm mb-4 md:mb-0">
+        © 2025 हरे कृष्णा | सर्वाधिकार सुरक्षित
+      </p>
+      
+      <!-- Center Links -->
+      <div class="flex space-x-6 mb-4 md:mb-0">
+        <a href="index.html" class="hover:text-[#EC4899] transition-colors">Home</a>
+        <a href="counter.html" class="hover:text-[#EC4899] transition-colors">Counter</a>
+        <a href="video_lab.html" class="hover:text-[#EC4899] transition-colors">Videos</a>
+        <a href="#" class="hover:text-[#EC4899] transition-colors">Contact</a>
+      </div>
+      
+      <!-- Right Side Social Icons -->
+      <div class="flex space-x-5 text-lg">
+        <a href="#" class="hover:text-[#EC4899]"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="hover:text-[#EC4899]"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="hover:text-[#EC4899]"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="hover:text-[#EC4899]"><i class="fa-brands fa-whatsapp"></i></a>
+      </div>
+    </div>
+  </footer>
+
+
+
+
 </html>
